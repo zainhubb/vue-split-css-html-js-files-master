@@ -1,7 +1,7 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const mkdirp = require('mkdirp');
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const mkdirp = require("mkdirp");
 
 /**
  * 文件生成器
@@ -17,42 +17,44 @@ class FileGenerator {
    */
   generateFile(filePath) {
     // 切分路径，上一个/后面文件名
-    const index = filePath.lastIndexOf('/');
-    const fileSourcePath = filePath.slice(0, index).replace('"', '');
-	let fileNamePath = `${filePath.slice(index + 1, filePath.length).replace('"', '')}`;
-	const checkFirstUpperCase = this.checkFirstUpperCase(fileNamePath);
+    const index = filePath.lastIndexOf("/");
+    const fileSourcePath = filePath.slice(0, index).replace('"', "");
+    let fileNamePath = `${filePath
+      .slice(index + 1, filePath.length)
+      .replace('"', "")}`;
+    const checkFirstUpperCase = this.checkFirstUpperCase(fileNamePath);
 
-	if (!checkFirstUpperCase) {
-		console.log(`Error: 组件名 ${fileNamePath} 首字母必须大写`);
-		return;
-	}
-	if (fileNamePath.indexOf('-') !== -1) {
-		console.log(`Error: 组件名 ${fileNamePath} 不应该包含 - 符号`);
-		return;
-	}
+    if (!checkFirstUpperCase) {
+      console.log(`Error: 组件名 ${fileNamePath} 首字母必须大写`);
+      return;
+    }
+    if (fileNamePath.indexOf("-") !== -1) {
+      console.log(`Error: 组件名 ${fileNamePath} 不应该包含 - 符号`);
+      return;
+    }
 
-	// 去除后缀
-	const pointIndex = fileNamePath.lastIndexOf('.');
-	if (pointIndex !== -1) {
-		fileNamePath = fileNamePath.substr(0, pointIndex);
-		console.log(fileNamePath);
-	}
+    // 去除后缀
+    const pointIndex = fileNamePath.lastIndexOf(".");
+    if (pointIndex !== -1) {
+      fileNamePath = fileNamePath.substr(0, pointIndex);
+      console.log(fileNamePath);
+    }
 
     // 检测目录是否存在,不存在创建
-	const folderExist = this.checkFolderOrFileExist(fileSourcePath);
-	const folderPath = path.resolve(process.cwd(), fileSourcePath);
-  const componentName = `${fileSourcePath}/${fileNamePath}.vue`;
+    const folderExist = this.checkFolderOrFileExist(fileSourcePath);
+    const folderPath = path.resolve(process.cwd(), fileSourcePath);
+    const componentName = `${fileSourcePath}/${fileNamePath}.vue`;
     if (folderExist && fs.readdirSync(folderPath).length > 0) {
-		  console.error(`Error: 组件 ${folderPath} 目录不能存在文件`);
-		  return;
+      console.error(`Error: 组件 ${folderPath} 目录不能存在文件`);
+      return;
     } else {
-		mkdirp.sync(folderPath);
-		const createResult = this.createTemplate(folderPath, fileNamePath);
+      mkdirp.sync(folderPath);
+      const createResult = this.createTemplate(folderPath, fileNamePath);
 
-		if (createResult && createResult.success) {
-			console.log('Success 成功创建组件: ', componentName);
-		}
-  	}
+      if (createResult && createResult.success) {
+        console.log("Success 成功创建组件: ", componentName);
+      }
+    }
   }
 
   /**
@@ -60,15 +62,15 @@ class FileGenerator {
    * @param {*} fileSourcePath 目录路径
    */
   checkFolderOrFileExist(fileSourcePath) {
-	const pathStr = path.resolve(process.cwd(), fileSourcePath);
-	console.log(pathStr);
+    const pathStr = path.resolve(process.cwd(), fileSourcePath);
+    console.log(pathStr);
     let result = false;
     try {
       if (fs.existsSync(pathStr)) {
         // file exists
         result = true;
       }
-    } catch(err) {
+    } catch (err) {
       // console.error(err)
       result = false;
     }
@@ -82,8 +84,8 @@ class FileGenerator {
    */
   createTemplate(fileSourcePath, fileName) {
     let result = {
-		success: false
-	};
+      success: false
+    };
     try {
       // 主入口文件
       const vuePath = `${fileSourcePath}/${fileName}.vue`;
@@ -113,7 +115,7 @@ class FileGenerator {
       result = {
         success: false,
         error
-	  };
+      };
     }
 
     return result;
@@ -124,9 +126,9 @@ class FileGenerator {
    * @param {*} compentName 组件名
    */
   getFileComponentName(compentName) {
-    const compentNameList = compentName.split('');
-    let compentGenerateName = '';
-    for(let i = 0; i < compentNameList.length; i++) {
+    const compentNameList = compentName.split("");
+    let compentGenerateName = "";
+    for (let i = 0; i < compentNameList.length; i++) {
       let wordsItem = compentNameList[i];
       if (i != 0) {
         if (this.checkUpperCase(wordsItem)) {
@@ -135,7 +137,7 @@ class FileGenerator {
       } else {
         wordsItem = wordsItem.toLowerCase();
       }
-      compentGenerateName += wordsItem
+      compentGenerateName += wordsItem;
     }
 
     return compentGenerateName;
@@ -146,16 +148,16 @@ class FileGenerator {
    * @param {*} compentName 文件名
    */
   checkFirstUpperCase(compentName) {
-	const compentNameList = compentName.split('');
-	if (compentNameList && compentNameList.length > 0) {
-		const checkItem = compentNameList[0] || '';
+    const compentNameList = compentName.split("");
+    if (compentNameList && compentNameList.length > 0) {
+      const checkItem = compentNameList[0] || "";
 
-		if (this.checkUpperCase(checkItem)) {
-			return true;
-		}
-	}
+      if (this.checkUpperCase(checkItem)) {
+        return true;
+      }
+    }
 
-	return false;
+    return false;
   }
 
   /**
@@ -224,11 +226,10 @@ export default {
 <style src="./${fileName}.vue.css" lang="css"></style>
 `;
   }
-
 }
 
-const splitString = process.env.npm_package_scripts_vux_generate || '';
-const splitStringArray = splitString.split(' ');
+const splitString = process.env.npm_package_scripts_vux_generate || "";
+const splitStringArray = splitString.split(" ");
 
 if (splitStringArray.length > 1) {
   // 拿到用户创建目录
@@ -238,6 +239,6 @@ if (splitStringArray.length > 1) {
   if (filePath) {
     new FileGenerator(filePath);
   } else {
-    console.log('请输入文件路径');
+    console.log("请输入文件路径");
   }
 }
