@@ -67,14 +67,14 @@ fs.readFile(filePath, "utf8", (err, data) => {
     vueTemplate = `
       ${templateMatch}
       <script src="./${fileName}.js"></script>
-      <style src="./${fileName}.scss"></style>
+      <style src="./${fileName}.css"></style>
       `;
   }
   if (style2Match) {
     vueTemplate = `
       ${templateMatch}
       <script src="./${fileName}.js"></script>
-      <style scoped src="./${fileName}.scss"></style>`;
+      <style scoped src="./${fileName}.css"></style>`;
   }
   if (style3Match || style4Match) {
     vueTemplate = `
